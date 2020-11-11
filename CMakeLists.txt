@@ -157,17 +157,21 @@ target_sources(openh264_proc PRIVATE
 )
 
 
-
-execute_process(COMMAND ${CMAKE_COMMAND} "-E" "touch" "dummy.cpp" WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-
 add_library(openh264 SHARED
-    ${CMAKE_CURRENT_BINARY_DIR}/dummy.cpp
     openh264.def)
 target_include_directories(openh264
 PUBLIC
     codec/api/svc
 )
 target_link_libraries(openh264 PUBLIC openh264_common openh264_enc openh264_dec openh264_proc)
+
+
+add_library(openh264_a INTERFACE)
+target_include_directories(openh264_a
+INTERFACE
+    codec/api/svc
+)
+target_link_libraries(openh264_a INTERFACE openh264_common openh264_enc openh264_dec openh264_proc)
 
 
 include(CheckLanguage)
