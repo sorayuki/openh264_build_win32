@@ -3,7 +3,6 @@ project(openh264)
 
 option(OPENH264_USE_ASM "Build with nasm assembler" ON)
 
-
 add_library(openh264_common STATIC)
 target_compile_definitions(openh264_common PRIVATE _LIB=1)
 target_include_directories(openh264_common
@@ -157,6 +156,8 @@ target_sources(openh264_proc PRIVATE
 )
 
 
+execute_process(COMMAND ${CMAKE_COMMAND} "-E" "touch" "dummy.cpp" WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
 add_library(openh264 SHARED
     openh264.def)
 target_include_directories(openh264
@@ -166,12 +167,12 @@ PUBLIC
 target_link_libraries(openh264 PUBLIC openh264_common openh264_enc openh264_dec openh264_proc)
 
 
-add_library(openh264_a INTERFACE)
+add_library(openh264_a STATIC ${CMAKE_CURRENT_BINARY_DIR}/dummy.cpp)
 target_include_directories(openh264_a
-INTERFACE
+PUBLIC
     codec/api/svc
 )
-target_link_libraries(openh264_a INTERFACE openh264_common openh264_enc openh264_dec openh264_proc)
+target_link_libraries(openh264_a PUBLIC openh264_common openh264_enc openh264_dec openh264_proc)
 
 
 include(CheckLanguage)
